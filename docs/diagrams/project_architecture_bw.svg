@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 680" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700; fill: #000000; font-size: 20px; }
+      .subtitle { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 400; fill: #444444; font-size: 13px; }
+      .node-title { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700; font-size: 13px; fill: #000000; }
+      .node-desc { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 400; font-size: 11px; fill: #333333; }
+      .badge { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; fill: #444444; }
+      .arrow { stroke: #000000; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+      .group-label { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700; font-size: 11px; fill: #000000; text-transform: uppercase; letter-spacing: 0.5px; }
+    </style>
+    
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#000000" />
+    </marker>
+  </defs>
+
+  <!-- Background (Pure White for printing) -->
+  <rect width="1100" height="680" fill="#ffffff" />
+  
+  <!-- Header -->
+  <g transform="translate(50, 35)">
+    <text class="title" x="0" y="0">On-Device Workflow Engine: System Architecture &amp; Data Pipeline</text>
+    <text class="subtitle" x="0" y="22">Deterministic, Zero-Cloud Document &amp; Spreadsheet Automation on 8 GB RAM PCs</text>
+    <line x1="0" y1="35" x2="1000" y2="35" stroke="#000000" stroke-width="1.2" />
+  </g>
+
+  <!-- Group 1: User & Ingestion -->
+  <g transform="translate(50, 95)">
+    <rect width="300" height="490" rx="4" fill="#fafafa" stroke="#000000" stroke-width="1.2" />
+    <text class="group-label" x="18" y="28">1. Ingestion &amp; UI Layer</text>
+
+    <!-- Box 1 -->
+    <g transform="translate(18, 45)">
+      <rect width="264" height="95" rx="3" fill="#ffffff" stroke="#333333" stroke-width="1" />
+      <text class="badge" x="12" y="20">DESKTOP DESKTOP UI (TAURI V2)</text>
+      <text class="node-title" x="12" y="40">Drop-Zone Ingestion</text>
+      <text class="node-desc" x="12" y="60">• Drop messy .xlsx, .csv, receipts</text>
+      <text class="node-desc" x="12" y="76">• 100% on-device local storage</text>
+    </g>
+
+    <!-- Box 2 -->
+    <g transform="translate(18, 155)">
+      <rect width="264" height="95" rx="3" fill="#ffffff" stroke="#333333" stroke-width="1" />
+      <text class="badge" x="12" y="20">PRE-PROCESSING</text>
+      <text class="node-title" x="12" y="40">Schema &amp; Metadata Filter</text>
+      <text class="node-desc" x="12" y="60">• Extracts column headers &amp; types</text>
+      <text class="node-desc" x="12" y="76">• 3-row sample only (&lt;140 tokens)</text>
+    </g>
+
+    <!-- Box 3 -->
+    <g transform="translate(18, 265)">
+      <rect width="264" height="120" rx="3" fill="#ffffff" stroke="#333333" stroke-width="1" />
+      <text class="badge" x="12" y="20">VISUAL FEEDBACK</text>
+      <text class="node-title" x="12" y="40">Dry-Run &amp; Diff Preview</text>
+      <text class="node-desc" x="12" y="60">• Side-by-side row variance check</text>
+      <text class="node-desc" x="12" y="76">• Highlights flagged exceptions</text>
+      <text class="node-desc" x="12" y="92">• One-click download &amp; audit export</text>
+    </g>
+  </g>
+
+  <!-- Group 2: Local SLM Inference -->
+  <g transform="translate(390, 95)">
+    <rect width="320" height="490" rx="4" fill="#fafafa" stroke="#000000" stroke-width="1.2" />
+    <text class="group-label" x="18" y="28">2. Local Inference (CPU)</text>
+
+    <!-- Box 4 -->
+    <g transform="translate(18, 45)">
+      <rect width="284" height="105" rx="3" fill="#ffffff" stroke="#333333" stroke-width="1" />
+      <text class="badge" x="12" y="20">OPEN-SOURCE SLM (APACHE 2.0 / MIT)</text>
+      <text class="node-title" x="12" y="40">4B Model (GGUF Quantized)</text>
+      <text class="node-desc" x="12" y="60">• llama.cpp Q4_K_M (~2.2 GB RAM)</text>
+      <text class="node-desc" x="12" y="76">• CPU execution (AVX2 SIMD)</text>
+      <text class="node-desc" x="12" y="92">• Hot prefix-cached KV buffer</text>
+    </g>
+
+    <!-- Box 5 -->
+    <g transform="translate(18, 165)">
+      <rect width="284" height="115" rx="3" fill="#ffffff" stroke="#333333" stroke-width="1" />
+      <text class="badge" x="12" y="20">CONSTRAINED DECODING</text>
+      <text class="node-title" x="12" y="40">GBNF Grammar Engine</text>
+      <text class="node-desc" x="12" y="60">• Context-free grammar token masking</text>
+      <text class="node-desc" x="12" y="76">• Zero conversational hallucinations</text>
+      <text class="node-desc" x="12" y="92">• Emits only strict JSON tool plans</text>
+    </g>
+
+    <!-- Box 6 -->
+    <g transform="translate(18, 295)">
+      <rect width="284" height="130" rx="3" fill="#f5f5f5" stroke="#333333" stroke-width="1" />
+      <text class="badge" x="12" y="20">STRUCTURED JSON PLAN</text>
+      <text font-family="monospace" font-size="10" fill="#000000" x="12" y="42">{ "op": "reconcile_ledgers",</text>
+      <text font-family="monospace" font-size="10" fill="#000000" x="12" y="58">  "primary_key": "inv_num",</text>
+      <text font-family="monospace" font-size="10" fill="#000000" x="12" y="74">  "match_key": "ref_code",</text>
+      <text font-family="monospace" font-size="10" fill="#000000" x="12" y="90">  "tolerance": 0.01 }</text>
+      <text class="node-desc" x="12" y="112" font-style="italic">Model never does math directly</text>
+    </g>
+  </g>
+
+  <!-- Group 3: Deterministic Engine -->
+  <g transform="translate(750, 95)">
+    <rect width="300" height="490" rx="4" fill="#fafafa" stroke="#000000" stroke-width="1.2" />
+    <text class="group-label" x="18" y="28">3. Deterministic Ops &amp; QA</text>
+
+    <!-- Box 7 -->
+    <g transform="translate(18, 45)">
+      <rect width="264" height="105" rx="3" fill="#ffffff" stroke="#333333" stroke-width="1" />
+      <text class="badge" x="12" y="20">SANDBOXED RUNTIME</text>
+      <text class="node-title" x="12" y="40">Pre-Audited Ops Engine</text>
+      <text class="node-desc" x="12" y="60">• Python 3.11 + Pandas + Openpyxl</text>
+      <text class="node-desc" x="12" y="76">• Reconcile, filter, group, aggregate</text>
+      <text class="node-desc" x="12" y="92">• Injects live native Excel formulas</text>
+    </g>
+
+    <!-- Box 8 -->
+    <g transform="translate(18, 165)">
+      <rect width="264" height="125" rx="3" fill="#ffffff" stroke="#333333" stroke-width="1" />
+      <text class="badge" x="12" y="20">ACCURACY GATE</text>
+      <text class="node-title" x="12" y="40">Multi-Layer Integrity Gate</text>
+      <text class="node-desc" x="12" y="60">• Row invariant: |R_in| = |R_out| + |E|</text>
+      <text class="node-desc" x="12" y="76">• Consensus dual-calc check</text>
+      <text class="node-desc" x="12" y="92">• Trap null primary keys</text>
+      <text class="node-desc" x="12" y="108">• Never overwrites original file</text>
+    </g>
+
+    <!-- Box 9 -->
+    <g transform="translate(18, 305)">
+      <rect width="264" height="120" rx="3" fill="#ffffff" stroke="#333333" stroke-width="1" />
+      <text class="badge" x="12" y="20">AUDIT DELIVERABLE</text>
+      <text class="node-title" x="12" y="40">Final Files &amp; Audit Lineage</text>
+      <text class="node-desc" x="12" y="60">• Output: original_reconciled.xlsx</text>
+      <text class="node-desc" x="12" y="76">• Working =SUM() &amp; =IF() formulas</text>
+      <text class="node-desc" x="12" y="92">• provenance.json (SHA-256)</text>
+    </g>
+  </g>
+
+  <!-- Connective Arrows -->
+  <line x1="200" y1="250" x2="200" y2="265" class="arrow" marker-end="url(#arrowhead)" />
+  <path d="M 332 202 L 390 202" class="arrow" marker-end="url(#arrowhead)" />
+  <line x1="550" y1="260" x2="550" y2="275" class="arrow" marker-end="url(#arrowhead)" />
+  <line x1="550" y1="425" x2="550" y2="440" class="arrow" marker-end="url(#arrowhead)" />
+  <path d="M 692 460 L 720 460 L 720 202 L 750 202" class="arrow" marker-end="url(#arrowhead)" />
+  <line x1="900" y1="270" x2="900" y2="285" class="arrow" marker-end="url(#arrowhead)" />
+  <line x1="900" y1="430" x2="900" y2="445" class="arrow" marker-end="url(#arrowhead)" />
+
+  <!-- Footer Banner -->
+  <g transform="translate(50, 605)">
+    <rect width="1000" height="45" rx="3" fill="#ffffff" stroke="#000000" stroke-width="1" />
+    <text font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#000000" x="25" y="27">Target Specs: <tspan font-weight="400">8 GB RAM (No GPU)</tspan></text>
+    <text font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#000000" x="260" y="27">Peak Memory: <tspan font-weight="400">~2.8 GB RAM</tspan></text>
+    <text font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#000000" x="480" y="27">Task Latency: <tspan font-weight="400">20–30s End-to-End</tspan></text>
+    <text font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#000000" x="720" y="27">Network: <tspan font-weight="400">0 KB (100% Offline)</tspan></text>
+  </g>
+</svg>

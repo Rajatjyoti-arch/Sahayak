@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 800" width="100%" height="100%">
+  <defs>
+    <style>
+      .main-title { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700; fill: #0f172a; font-size: 22px; }
+      .main-sub { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 400; fill: #64748b; font-size: 13px; }
+      .pillar-title { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700; font-size: 15px; }
+      .box-head { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+      .item-text { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 400; font-size: 12px; fill: #334155; }
+      .highlight-bad { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 600; font-size: 12px; fill: #b91c1c; }
+      .highlight-good { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 600; font-size: 12px; fill: #15803d; }
+    </style>
+    <filter id="shadow" x="-3%" y="-4%" width="106%" height="110%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.06" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1100" height="800" fill="#f8fafc" rx="16" />
+
+  <!-- Title Banner -->
+  <g transform="translate(50, 40)">
+    <text class="main-title" x="0" y="0">Why Project Sovereign Is a Breakthrough: 4 Core Innovation Pillars</text>
+    <text class="main-sub" x="0" y="24">Side-by-side contrast: Conventional Cloud &amp; Local AI approaches vs. Sovereign's Deterministic Architecture</text>
+  </g>
+
+  <!-- Pillar 1: Planner, Never Calculator -->
+  <g transform="translate(50, 85)" filter="url(#shadow)">
+    <rect width="1000" height="150" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+    <text class="pillar-title" fill="#0369a1" x="24" y="30">Pillar 1: "Planner, Never Calculator" — Overcoming the Arithmetic Hallucination Trap</text>
+    
+    <!-- Bad Box -->
+    <g transform="translate(24, 45)">
+      <rect width="460" height="90" rx="6" fill="#fef2f2" stroke="#fecaca" stroke-width="1" />
+      <text class="box-head" fill="#b91c1c" x="14" y="22">CONVENTIONAL APPROACH (Cloud / Raw LLM)</text>
+      <text class="item-text" x="14" y="42">• Asks LLM to calculate taxes, sum columns, and reconcile totals.</text>
+      <text class="item-text" x="14" y="58">• Autoregressive next-token prediction fails on multi-digit math.</text>
+      <text class="highlight-bad" x="14" y="76">Result: Silent, catastrophic financial errors in spreadsheets.</text>
+    </g>
+
+    <!-- Good Box -->
+    <g transform="translate(516, 45)">
+      <rect width="460" height="90" rx="6" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1" />
+      <text class="box-head" fill="#15803d" x="14" y="22">THE SOVEREIGN INNOVATION</text>
+      <text class="item-text" x="14" y="42">• The SLM is strictly forbidden from doing mental arithmetic.</text>
+      <text class="item-text" x="14" y="58">• Serves only as a semantic router emitting typed operation plans.</text>
+      <text class="highlight-good" x="14" y="76">Result: 100% deterministic calculation via native Python engines.</text>
+    </g>
+  </g>
+
+  <!-- Pillar 2: GBNF Grammar Constraints -->
+  <g transform="translate(50, 255)" filter="url(#shadow)">
+    <rect width="1000" height="150" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+    <text class="pillar-title" fill="#7e22ce" x="24" y="30">Pillar 2: GBNF Grammar Constraints — Eliminating Syntax Crashes &amp; Rogue Code</text>
+    
+    <!-- Bad Box -->
+    <g transform="translate(24, 45)">
+      <rect width="460" height="90" rx="6" fill="#fef2f2" stroke="#fecaca" stroke-width="1" />
+      <text class="box-head" fill="#b91c1c" x="14" y="22">CONVENTIONAL APPROACH (Freeform Agents)</text>
+      <text class="item-text" x="14" y="42">• 3B/4B models attempt to generate freeform Python scripts.</text>
+      <text class="item-text" x="14" y="58">• High rate of syntax bugs and arbitrary shell execution risks.</text>
+      <text class="highlight-bad" x="14" y="76">Result: Script crashes, non-deterministic execution, security flaws.</text>
+    </g>
+
+    <!-- Good Box -->
+    <g transform="translate(516, 45)">
+      <rect width="460" height="90" rx="6" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1" />
+      <text class="box-head" fill="#15803d" x="14" y="22">THE SOVEREIGN INNOVATION</text>
+      <text class="item-text" x="14" y="42">• llama.cpp Context-Free Grammar (GBNF) masks invalid tokens.</text>
+      <text class="item-text" x="14" y="58">• Physically impossible to output conversational text or rogue code.</text>
+      <text class="highlight-good" x="14" y="76">Result: 100% valid JSON tool calls mapped to audited ops.</text>
+    </g>
+  </g>
+
+  <!-- Pillar 3: 8 GB RAM Physical Feasibility -->
+  <g transform="translate(50, 425)" filter="url(#shadow)">
+    <rect width="1000" height="150" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+    <text class="pillar-title" fill="#0f766e" x="24" y="30">Pillar 3: The 8 GB RAM Physical Feasibility Guarantee — Zero GPU Required</text>
+    
+    <!-- Bad Box -->
+    <g transform="translate(24, 45)">
+      <rect width="460" height="90" rx="6" fill="#fef2f2" stroke="#fecaca" stroke-width="1" />
+      <text class="box-head" fill="#b91c1c" x="14" y="22">CONVENTIONAL APPROACH (Bloated Stacks)</text>
+      <text class="item-text" x="14" y="42">• Cloud AI demands $20–$30/mo and continuous broadband.</text>
+      <text class="item-text" x="14" y="58">• Local tools require 16GB+ VRAM GPUs; dumps whole sheets into RAM.</text>
+      <text class="highlight-bad" x="14" y="76">Result: System thrashing and out-of-memory crashes on 8 GB PCs.</text>
+    </g>
+
+    <!-- Good Box -->
+    <g transform="translate(516, 45)">
+      <rect width="460" height="90" rx="6" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1" />
+      <text class="box-head" fill="#15803d" x="14" y="22">THE SOVEREIGN INNOVATION</text>
+      <text class="item-text" x="14" y="42">• 4-bit quant (2.2 GB) + pre-allocated KV buffer (280 MB).</text>
+      <text class="item-text" x="14" y="58">• Webview (110 MB) + Python (160 MB) = Peak 2.8 GB total.</text>
+      <text class="highlight-good" x="14" y="76">Result: Leaves &gt;1 GB safety headroom; zero OS disk paging.</text>
+    </g>
+  </g>
+
+  <!-- Pillar 4: Multi-Layer Verification & Provenance -->
+  <g transform="translate(50, 595)" filter="url(#shadow)">
+    <rect width="1000" height="150" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+    <text class="pillar-title" fill="#c2410c" x="24" y="30">Pillar 4: Multi-Layer Integrity Gate &amp; Immutable Audit Lineage</text>
+    
+    <!-- Bad Box -->
+    <g transform="translate(24, 45)">
+      <rect width="460" height="90" rx="6" fill="#fef2f2" stroke="#fecaca" stroke-width="1" />
+      <text class="box-head" fill="#b91c1c" x="14" y="22">CONVENTIONAL APPROACH (Black-Box AI)</text>
+      <text class="item-text" x="14" y="42">• Unverified output handed to user with zero proof of correctness.</text>
+      <text class="item-text" x="14" y="58">• openpyxl round-tripping corrupts existing charts and pivot tables.</text>
+      <text class="highlight-bad" x="14" y="76">Result: Zero audit trail, high professional liability for accountants.</text>
+    </g>
+
+    <!-- Good Box -->
+    <g transform="translate(516, 45)">
+      <rect width="460" height="90" rx="6" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1" />
+      <text class="box-head" fill="#15803d" x="14" y="22">THE SOVEREIGN INNOVATION</text>
+      <text class="item-text" x="14" y="42">• Invariant assertions (|R_in| = |R_out| + |E|) + dual consensus calc.</text>
+      <text class="item-text" x="14" y="58">• Non-destructive generation: original file is never overwritten.</text>
+      <text class="highlight-good" x="14" y="76">Result: Cryptographic SHA-256 provenance log + native formulas.</text>
+    </g>
+  </g>
+
+  <!-- Footer Banner -->
+  <g transform="translate(50, 755)">
+    <rect width="1000" height="32" rx="6" fill="#0f172a" />
+    <text font-family="'Inter', sans-serif" font-size="11" fill="#94a3b8" x="20" y="20">Project Sovereign: <tspan fill="#38bdf8" font-weight="600">The 100% Private Local Workflow Engine</tspan></text>
+    <text font-family="'Inter', sans-serif" font-size="11" fill="#94a3b8" x="420" y="20">Target: <tspan fill="#ffffff" font-weight="600">8 GB RAM Budget Laptops</tspan></text>
+    <text font-family="'Inter', sans-serif" font-size="11" fill="#4ade80" font-weight="600" x="780" y="20">✓ 100% Deterministic &amp; Audit-Ready</text>
+  </g>
+</svg>

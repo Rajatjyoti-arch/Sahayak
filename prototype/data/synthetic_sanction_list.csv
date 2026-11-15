@@ -1,0 +1,14 @@
+source_row_id,application_no,beneficiary_name,parentage,masked_account_ref,bank_ifsc,sanctioned_amount,tehsil
+SAN-001,SCH-2026-001,Ramesh Sharma,S/o Som Nath,XXXX-1024,SBIN0001234,5000.00,Samba
+SAN-002,SCH-2026-002,Sunita Devi,W/o Vijay Kumar,XXXX-5521,JAKA0SAMBA1,"₹ 5,000.00",Samba
+SAN-003,SCH-2026-003,Ghulam Hassan Mir,S/o Wali Mohd,XXXX-9012,JAKA0BDO001,4000.00,Vijaypur
+SAN-004,SCH-2026-004,Pooja Verma,D/o Satish Verma,XXXX-3341,PUNB0123400,3000.50,Ghagwal
+SAN-005,SCH-2026-005,Kartar Singh,S/o Amar Singh,XXXX-7719,SBIN0004567,"10,000.00",Ramgarh
+SAN-006,SCH-2026-006,Mohd Iqbal,S/o Abdul Rashid,XXXX-4812,SBIN0001234,4000.00,Samba
+SAN-007,SCH-2026-007,Tariq Ahmed Rather,S/o Ghulam Qadir,XXXX-6623,JAKA0SAMBA1,5000.00,Vijaypur
+SAN-008,SCH-2026-008,Meenakshi Kumari,D/o Kuldeep Raj,XXXX-8104,SBIN0001234,"₹ 5,000.00",Ghagwal
+SAN-009,SCH-2026-009,Parveen Akhtar,W/o Bashir Ahmed,XXXX-9128,JAKA0BDO001,5000.00,Ramgarh
+SAN-010,SCH-2026-010,Surinder Kumar,S/o Hans Raj,XXXX-8821,SBIN0001234,5000.00,Samba
+SAN-011,SCH-2026-001,Ramesh Sharma,S/o Som Nath,XXXX-1024,SBIN0001234,5000.00,Samba
+SAN-012,SCH-2026-012,Bishan Dass,S/o Mool Raj,XXXX-4411,SBIN0001234,5000.00,Samba
+SAN-013,SCH-2026-013,Neelam Sharma,W/o Ashok Kumar,XXXX-3912,SBIN0001234,5000.999,Vijaypur

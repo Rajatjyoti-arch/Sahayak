@@ -1,0 +1,649 @@
+% ===============================================================
+%  Innovathon 2.0 -- Offline Governance Assistant Dossier
+%  Compiles with pdfLaTeX, XeLaTeX and LuaLaTeX (any Overleaf
+%  compiler setting). XeLaTeX/LuaLaTeX give the best rupee glyph.
+% ===============================================================
+\documentclass[11pt,a4paper]{article}
+
+% ---------------------------------------------------------------
+% 1. Engine-specific fonts and the rupee sign
+% ---------------------------------------------------------------
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}        % correct | < > in text and \texttt
+  \usepackage[utf8]{inputenc}
+  \usepackage{lmodern}
+  \usepackage{newunicodechar}
+  % fontawesome5 ships with Overleaf; fall back to "Rs." if it is missing
+  \IfFileExists{fontawesome5.sty}
+    {\usepackage{fontawesome5}\newunicodechar{₹}{\faRupeeSign\hspace{0.05em}}}
+    {\newunicodechar{₹}{Rs.\,}}
+\else
+  \usepackage{fontspec}
+  \defaultfontfeatures{Ligatures=TeX}
+  \usepackage{newunicodechar}
+  % Latin Modern lacks U+20B9, so borrow it from the first font found
+  \IfFontExistsTF{Noto Sans}{\newfontfamily\rupeefont{Noto Sans}}{%
+    \IfFontExistsTF{FreeSans}{\newfontfamily\rupeefont{FreeSans}}{%
+      \newfontfamily\rupeefont{DejaVu Sans}}}
+  \newunicodechar{₹}{{\rupeefont\symbol{"20B9}}}
+\fi
+
+% ---------------------------------------------------------------
+% 2. Layout and typography
+% ---------------------------------------------------------------
+\usepackage[left=0.75in, right=0.75in, top=1in, bottom=0.9in,
+            headheight=14pt, headsep=0.2in]{geometry}
+\usepackage{microtype}
+\emergencystretch=1.5em                 % fewer overfull hboxes
+
+% ---------------------------------------------------------------
+% 3. Packages
+% ---------------------------------------------------------------
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{etoolbox}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage[hidelinks,
+  pdftitle={Offline Governance Assistant -- Scheme Reconciliation Assistant},
+  pdfsubject={Innovathon 2.0 -- Track 1: AI for Intelligent Governance}]{hyperref}
+
+% ---------------------------------------------------------------
+% 4. Document metadata
+% ---------------------------------------------------------------
+\newcommand{\EventShort}{Innovathon 2.0 (University of Jammu)}
+\newcommand{\TrackShort}{Track 1: AI for Intelligent Governance}
+\newcommand{\MissionShort}{Viksit Bharat @2047 | Mission YUVA}
+\newcommand{\FooterNote}{Confidential Startup Business Plan \& Technical Dossier}
+
+% ---------------------------------------------------------------
+% 5. Headers, footers, headings, lists
+% ---------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small \textbf{\EventShort} | \TrackShort}
+\fancyhead[R]{\small \textbf{\MissionShort}}
+\fancyfoot[L]{\footnotesize \FooterNote}
+\fancyfoot[R]{\footnotesize Page \thepage\ of \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{1.4ex plus .4ex minus .2ex}{1ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{1.2ex plus .3ex minus .2ex}{0.8ex plus .2ex}
+
+\setlist[itemize]{leftmargin=1.5em, itemsep=2pt, topsep=3pt}
+\setlist[enumerate]{leftmargin=1.5em, itemsep=2pt, topsep=3pt}
+
+% ---------------------------------------------------------------
+% 6. Tables: ragged-right X column, small font, airy rows
+% ---------------------------------------------------------------
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\AtBeginEnvironment{tabularx}{\small\renewcommand{\arraystretch}{1.25}}
+
+% Short semantic helpers
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\JK}{J\&K}
+
+% ---------------------------------------------------------------
+% 7. Code listings (auto-wrapping)
+% ---------------------------------------------------------------
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  breaklines=true, breakatwhitespace=true, keepspaces=true,
+  columns=fullflexible, frame=single, framesep=4pt,
+  aboveskip=6pt, belowskip=6pt,
+  postbreak=\mbox{\tiny$\hookrightarrow$\space}
+}
+
+\begin{document}
+
+% =========================================================
+% COVER / TITLE HEADER
+% =========================================================
+\begin{center}
+    {\large \textbf{UNIVERSITY OF JAMMU -- INNOVATHON 2.0 (NATIONAL HACKATHON)}}\\[0.15cm]
+    {\normalsize \textbf{Skill Incubation Innovation Entrepreneurship Development Centre (SIIEDC)}}\\[0.1cm]
+    {\small \textbf{Track 1: AI for Intelligent Governance, Security \& Public Services} \quad $\bullet$ \quad \textbf{Viksit Bharat @2047 \& Mission YUVA}}\\[0.25cm]
+    \hrule height 1.2pt
+    \vspace{0.3cm}
+    {\LARGE \textbf{Offline Governance Assistant}}\\[0.15cm]
+    {\large \textbf{First Product Module: Scheme Reconciliation Assistant}}\\[0.15cm]
+    {\normalsize \textbf{Comprehensive Master Business Plan, Systems Architecture \& Financial Blueprint}}\\[0.2cm]
+    \hrule height 0.6pt
+\end{center}
+
+\vspace{0.2cm}
+\noindent\textbf{Institutional Framework:} Central University of Jammu (CUJ) in collaboration with University of Jammu (JU SIIEDC)\\
+\textbf{Document Classification:} DeepTech Startup Pitch, Systems Architecture \& Regulatory Dossier\\
+\textbf{Target Entity:} Proposed DeepTech Private Limited (DPIIT \& \JK{} Startup Policy Incubatee)\\
+\textbf{Target Hardware:} Entry-Level Government Desktop PCs (Intel Core i3/i5, 8 GB RAM, No GPU, Designed for On-Premise Execution)
+
+\vspace{0.3cm}
+
+% =========================================================
+% SECTION 1: EXECUTIVE BRIEF & THREE LEVELS OF SCOPE
+% =========================================================
+\section{Executive Summary \& Three Levels of Scope}
+
+\subsection{The Core Mission \& Operational Principle}
+Public administrative offices (Tehsils, Block Development Offices / BDOs, and Municipal Wards) handle citizen welfare disbursements and records under tight operational deadlines, legacy computer hardware, and strict data confidentiality obligations.
+
+Rather than promising an unconstrained general artificial intelligence that replaces human officers, the venture builds an \textbf{offline-first governance software platform} around a focused, demonstrable first product: the \textbf{Scheme Reconciliation Assistant}.
+
+The central operational principle governing the entire product is:
+\begin{quote}
+    \textbf{“AI suggests. Deterministic code calculates. The officer decides. Every material action is traceable.”}
+\end{quote}
+
+\subsection{Separation of Scope Across Three Horizons}
+To maintain complete credibility before government evaluators and hackathon juries, our capabilities are strictly partitioned into three distinct horizons:
+\begin{enumerate}
+    \item \textbf{Level 1: Strategic Vision (3 to 5 Years):} A local-first, privacy-conscious AI assistant for public administration. The long-term ambition is to assist authorized staff in processing fragmented administrative records into structured, auditable work products across multiple administrative workflows.
+    \item \textbf{Level 2: Reusable Product Platform (6 to 24 Months):} A reusable desktop runtime incorporating a local inference adapter, deterministic execution tools, a human review/adjudication UI, and tamper-evident audit-chain infrastructure. Future modules (such as document extraction, circular search, archival retrieval, and administrative drafting) will be added only after independent testing.
+    \item \textbf{Level 3: Locked V0 Prototype / First MVP (Innovathon 2.0 Focus):} The \textbf{Offline Scheme Reconciliation Assistant}. Ingests two spreadsheets (sanction list vs bank disbursement report), performs deterministic matching, flags exceptions, presents ambiguous candidates in a human review queue, and exports an audited Excel workbook. The MVP is designed for local execution without cloud inference; compatibility with 8 GB RAM workstations, end-to-end performance, and network-egress behaviour will be validated through documented tests before deployment claims are made.
+\end{enumerate}
+
+\vspace{0.2cm}
+
+% =========================================================
+% SECTION 2: PROBLEM DEFINITION & COMPETITIVE DIFFERENTIATION
+% =========================================================
+\section{Problem Hypothesis \& Competitive Differentiation}
+
+\subsection{Problem Hypothesis to Validate with Users}
+In grassroots offices across Jammu \& Kashmir and India, staff routinely compare records received from different sources: (1) Departmental Sanction Lists (beneficiaries, parentage, bank references, sanctioned amounts) and (2) Bank Disbursement / PFMS Reports (credits, UTR numbers, failure codes, disbursed amounts). 
+
+\textbf{The Working Hypothesis:} Manual row-by-row reconciliation across large datasets creates a recurring clerical burden, increases the risk of undetected disbursement errors, and complicates audit defense when records do not reconcile cleanly. The team will validate the actual files involved, typical record volumes, baseline task times, and recurring error categories through structured interviews with administrative staff during the pilot discovery phase.
+
+\subsection{Why Not Just Use Microsoft Excel or a Python Script?}
+Judges and technical officers will rightfully ask why a packaged tool is needed when Excel or Python can perform lookups. Our differentiation is grounded in operational usability and process governance:
+
+\vspace{0.15cm}
+\noindent
+\begin{tabularx}{\textwidth}{|l|Y|Y|Y|}
+\hline
+\textbf{Solution} & \textbf{What It Does Well} & \textbf{Operational Bottlenecks in Administration} & \textbf{Packaged Appliance Advantage} \\
+\hline
+\textbf{Excel / Power Query} 
+& Flexible, ubiquitous, and familiar to office staff.
+& High maintenance burden; formulas can be accidentally edited or dragged incorrectly; silent truncation of leading zeroes in account numbers (\code{'0045'} $\rightarrow$ \code{45}); lacks tamper-evident audit logs.
+& \textbf{Packaged Workflow:} Rigid execution rules; raw source files remain read-only; zero formula maintenance for clerks. \\
+\hline
+\textbf{Custom Python Script} 
+& Fast and flexible for data engineers.
+& Requires developer execution; CLI errors panic non-technical clerks; no visual review queue for ambiguous records; lacks process governance across workstations.
+& \textbf{Clerk-Friendly UI:} Native desktop GUI; zero coding required; visual adjudication cards for non-programmers. \\
+\hline
+\textbf{Commercial Cloud AI} 
+& Broad generative capabilities and language translation.
+& In remote blocks with unstable connectivity, cloud access is unreliable; departmental data-handling policies may restrict uploading citizen records to external multi-tenant cloud services.
+& \textbf{Local-First Processing:} Designed for on-premise execution; operational without cloud inference; external network behavior verified by audit. \\
+\hline
+\end{tabularx}
+
+\vspace{0.15cm}
+\begin{quote}
+    \textit{“The problem is not that matching records is impossible in Excel. The problem is that the same sensitive workflow must be executed consistently, transparently, and auditably by clerical staff who should not have to build, debug, and maintain their own data-processing tools.”}
+\end{quote}
+
+\vspace{0.2cm}
+
+% =========================================================
+% SECTION 3: LOCKED V0 PROTOTYPE SCOPE
+% =========================================================
+\section{Locked V0 Prototype Scope (The Reconciliation Engine)}
+
+To guarantee a reliable, testable live demonstration during the 36-hour hackathon, the V0 MVP boundary is strictly locked:
+\begin{itemize}
+    \item \textbf{Included in V0 (The Core Hero Workflow):}
+    \begin{enumerate}[noitemsep,topsep=0pt]
+        \item \textit{File Ingestion:} Drag-and-drop two CSV/XLSX files; source files remain strictly read-only.
+        \item \textit{Schema Mapping:} Deterministic alias dictionary first; local model suggests unknown headers; user explicitly confirms mapping before processing.
+        \item \textit{Normalization:} Strict string preservation; whitespace trimming without type coercion.
+        \item \textit{Exact Matching:} Multi-key deterministic matching on validated identifiers.
+        \item \textit{Candidate Generation:} Multi-signal fuzzy candidate generation (never auto-approved).
+        \item \textit{Exception Review Queue:} Visual cards displaying conflicting fields and match reasons; clerk explicitly chooses \textbf{[Approve as Match]}, \textbf{[Reject]}, or \textbf{[Flag for Inquiry]}.
+        \item \textit{Financial Integrity:} Strict parsing of currency into integer paise; zero floating-point arithmetic.
+        \item \textit{Audit Export:} Structured Excel workbook plus SHA-256 hash-chained event manifest.
+    \end{enumerate}
+    \item \textbf{Deliberately Excluded from V0 (Roadmap Only):}
+    Secretariat note-sheet (\textit{Tippani}) drafting (stretch feature only; outside critical demo path); scanned document OCR and handwriting recognition; autonomous beneficiary approvals; live government portal API integrations; and actual citizen Aadhaar data during demonstrations.
+\end{itemize}
+
+\vspace{0.2cm}
+
+% =========================================================
+% SECTION 4: DATA CONTRACT & MATCHING POLICY
+% =========================================================
+\section{Data Contract \& Matching Policy}
+
+\subsection{Synthetic Data Contract (Zero Live PII Risk)}
+The V0 prototype and hackathon demo use \textbf{strictly synthetic data} with known expected outcomes:
+
+\vspace{0.15cm}
+\noindent
+\begin{tabularx}{\textwidth}{|l|l|Y|}
+\hline
+\textbf{Canonical Field} & \textbf{Example Synthetic Value} & \textbf{Governance Handling Rule} \\
+\hline
+\code{source\_row\_id} & \code{SAN-01042} & Stable internal ID generated by the engine during run. \\
+\hline
+\code{sanction\_id} / \code{app\_no} & \code{SCH-2026-01042} & Strong key if both files share identical system semantics. \\
+\hline
+\code{beneficiary\_name} & \code{MOHD IQBAL} & Raw text preserved; normalized string stored separately. \\
+\hline
+\code{parentage} & \code{ABDUL RASHID} & Supporting identity signal; handles common abbreviations. \\
+\hline
+\code{masked\_account\_ref} & \code{XXXX-4812} & \textbf{Supporting signal only; never treated as a unique key.} \\
+\hline
+\code{bank\_ifsc} & \code{SBIN0001234} & Format-checked; not proof of account ownership. \\
+\hline
+\code{sanctioned\_amount} & \code{4000.00} & Strictly parsed to integer paise (\code{400000}). \\
+\hline
+\code{disbursed\_amount} & \code{4000.00} & Strictly parsed to integer paise (\code{400000}). \\
+\hline
+\code{transaction\_ref} / \code{pfms\_ref} & \code{UTR-SYN-00881} & Bank transaction reference from disbursement log. \\
+\hline
+\code{primary\_status} & \code{PENDING\_REVIEW} & Exactly one primary disposition assigned per row. \\
+\hline
+\end{tabularx}
+
+\subsection{Canonical Reconciliation Unit \& Cardinality Boundary (Locked V0 MVP)}
+To establish exact mathematical determinism, the V0 prototype locks a concrete first-workflow reconciliation unit:
+\begin{enumerate}
+    \item \textbf{File A (Departmental Sanction List):} Each row represents a \textbf{single beneficiary entitlement sanction for the declared payment cycle} (e.g., Monthly Welfare Pension Sanction Order, unique per beneficiary case).
+    \item \textbf{File B (Bank / PFMS Disbursement Log):} Each row represents a \textbf{single beneficiary payment credit outcome for the same payment cycle} (e.g., PFMS Monthly Direct Benefit Transfer Report, unique per beneficiary account credit).
+    \item \textbf{Locked Pair Cardinality:} Strictly \textbf{one-to-one (1:1)} in V0 MVP.
+    \item \textbf{Multi-Payment / Split Transactions:} If an upstream bank file provides multiple transaction lines for a single entitlement (e.g., split credits ₹2,500 and ₹1,500 for a ₹4,000 sanction), V0's duplicate detection rule isolates the subsequent transaction against the same beneficiary to \code{DUPLICATE\_EXCLUDED} with the flag \code{MULTIPLE\_TRANSACTIONS\_DETECTED}. Multi-transaction aggregation (many-to-one ledger reconciliation) is documented as a Level 2 (reusable platform) roadmap module, explicitly excluded from the critical V0 demo.
+\end{enumerate}
+
+\subsection{Separating Record Linkage from Financial Reconciliation}
+The engine strictly decouples two operational questions:
+\begin{enumerate}
+    \item \textbf{Record Linkage:} Do these two rows plausibly describe the same underlying beneficiary or case?
+    \item \textbf{Financial Reconciliation:} Once linked, do the sanctioned amount and disbursed amount agree, and what is the exact variance?
+\end{enumerate}
+\textbf{Critical Rule:} An amount mismatch does \textbf{not} disqualify a candidate match. If File A has \textit{“Mohd Iqbal, S/o Abdul Rashid, Acct ****-4812, Sanctioned ₹4,000”} and File B has \textit{“Mohammad Iqbal, S/o Ab. Rashid, Acct ****-4812, Disbursed ₹2,500”}, the system links them as a candidate pair and highlights the \textbf{₹1,500 Financial Discrepancy} for administrative review.
+
+\subsection{Multi-Signal Candidate Matching \& Review Rules}
+\begin{itemize}
+    \item \textbf{Multi-Signal Evaluation:} Candidate generation evaluates multiple corroborating identity signals (token/phonetic name similarity, parentage where present, masked account suffix where present, location identifiers).
+    \item \textbf{Thresholds as Experiment Parameters:} A name similarity threshold (such as $0.82$) is an initial experiment parameter, not a locked business rule. Thresholds must be calibrated against labelled test datasets.
+    \item \textbf{Missing vs. Conflicting Data:} Missing information does \textbf{not} count as agreement. Contradictory evidence (e.g., completely different parentage) is highlighted as a conflict.
+    \item \textbf{No Auto-Approvals:} Every fuzzy candidate sits in \code{PENDING\_REVIEW} until an authorized human officer explicitly chooses an action: \textbf{[Approve as Match]}, \textbf{[Reject / Keep Separate]}, or \textbf{[Flag for Field Inquiry]}.
+\end{itemize}
+
+\vspace{0.2cm}
+
+% =========================================================
+% SECTION 5: MATHEMATICAL INVARIANTS & STRICT CURRENCY PARSER
+% =========================================================
+\section{Mathematical Invariants \& Strict Integer Paise Parser}
+
+\subsection{Mutually Exclusive Row Partitioning}
+To guarantee zero record loss and mathematical consistency, every imported row in File A (Sanction List) and File B (Disbursement Report) is assigned \textbf{exactly one primary disposition}:
+\begin{equation}
+    N_A = M + U_A + D_A + I_A + P_A \qquad\text{and}\qquad N_B = M + U_B + D_B + I_B + P_B
+\end{equation}
+where $M$ is confirmed matched pairs (each containing exactly one row from File A and one from File B), $U$ is unmatched rows, $D$ is duplicate-excluded rows under the declared canonical duplicate policy, and $I$ is invalid/malformed rows. \textbf{$P_A$ and $P_B$ count distinct source rows assigned the primary status \code{PENDING\_REVIEW}, not candidate relationships.} Candidate edges are relationship metadata and do not inflate row counts, guaranteeing exact conservation. Secondary warning flags are tags and are never added to primary row counts.
+
+\subsection{Strict Integer Paise Currency Parser}
+To eliminate IEEE 754 floating-point representation drift (\code{5000.10} drifting to \code{5000.1000000000003}), all currency amounts are converted at ingestion into 64-bit integer paise:
+\begin{lstlisting}[language=Python]
+import re, math
+from decimal import Decimal
+
+_AMOUNT_RE = re.compile(
+    r"^(?:[0-9]+|[0-9]{1,3}(?:,[0-9]{3})+|[0-9]{1,2}(?:,[0-9]{2})*,[0-9]{3})(?:[.][0-9]{1,2})?$"
+)
+_CURRENCY_PREFIX_RE = re.compile(r"^(?:₹|INR|Rs[.]?)\s*", re.IGNORECASE)
+
+def parse_to_paise(amount_text: str) -> int:
+    """Parse text into integer paise. Rejects negatives, malformed commas, excess decimals."""
+    if not isinstance(amount_text, str):
+        raise TypeError("Expected currency string; handle numeric cells explicitly")
+    cleaned = re.sub(r"\s+", "", _CURRENCY_PREFIX_RE.sub("", amount_text.strip()))
+    if not cleaned or not _AMOUNT_RE.fullmatch(cleaned):
+        raise ValueError(f"Invalid currency amount: {amount_text!r}")
+    normalized = cleaned.replace(",", "")
+    rupees, dot, fractional = normalized.partition(".")
+    paise_text = (fractional + "00")[:2] if dot else "00"
+    return int(rupees) * 100 + int(paise_text)
+
+def parse_cell_to_paise(val) -> int:
+    """Parse cell (str, int, float, Decimal) into integer paise; rejects excess float precision."""
+    if val is None or val == "": raise ValueError("Empty currency cell")
+    if isinstance(val, bool): raise TypeError("Boolean not allowed")
+    if isinstance(val, int):
+        if val < 0: raise ValueError(f"Negative: {val}")
+        return val * 100
+    if isinstance(val, str): return parse_to_paise(val)
+    if isinstance(val, float):
+        if math.isnan(val) or math.isinf(val) or val < 0: raise ValueError(f"Invalid: {val}")
+        d = Decimal(str(val))
+    elif isinstance(val, Decimal):
+        if val < 0: raise ValueError(f"Negative: {val}")
+        d = val
+    else: raise TypeError(f"Unsupported: {type(val)}")
+    if d.as_tuple().exponent < -2: raise ValueError(f"Excess precision: {val}")
+    return int((d * 100).to_integral_value())
+\end{lstlisting}
+
+\subsection{Financial Reconciliation Bridge}
+The financial variance is calculated deterministically across verified categories:
+\begin{equation}
+    \text{Matched-Pair Variance } (\Delta_{\text{matched}}) = \sum_{i \in M} (S_i - D_i)
+\end{equation}
+Scheme-wide financial totals are reported across distinct accounting buckets: Total Sanctioned Amount ($\sum S$), Total Disbursed Amount ($\sum D$), Matched-Pair Net Discrepancy ($\Delta_{\text{matched}}$), Unmatched Sanctioned Total ($S_{\text{unmatched}}$), and Unmatched Disbursed Total ($D_{\text{unmatched}}$).
+
+\vspace{0.2cm}
+
+% =========================================================
+% SECTION 6: TECHNICAL ARCHITECTURE & CANDIDATE MODEL
+% =========================================================
+\section{Technical Architecture \& Local Inference Candidate}
+
+\subsection{Logical Architecture Pipeline}
+The desktop application is built with a decoupled architecture:
+\begin{itemize}
+    \item \textbf{Desktop GUI (Tauri v2 / Rust):} Native desktop window, local file drag-and-drop, progress bar, exception review cards, and export triggers.
+    \item \textbf{Import \& Normalization Layer:} Raw text preservation, type-safe schema parsing, integer paise conversion.
+    \item \textbf{Deterministic Matching Engine:} Exact multi-key hashing, blocking algorithms, multi-signal fuzzy scoring.
+    \item \textbf{Local SLM Adapter (Primary Candidate: Qwen2.5-1.5B):} Bounded schema suggestion for unfamiliar column headers. Model is loaded only when required and released immediately after.
+    \item \textbf{Human Review Layer:} Dedicated UI queue presenting conflicting fields and requiring explicit clerk adjudication.
+    \item \textbf{Report Generator (openpyxl):} Outputs structured, multi-tab Excel workbooks.
+    \item \textbf{Audit Subsystem:} Generates monotonic sequence numbers and SHA-256 hash chains.
+\end{itemize}
+
+\subsection{Model Selection: Primary Candidate}
+\begin{itemize}
+    \item \textbf{Selected Candidate Model:} \textbf{\code{Qwen2.5-1.5B-Instruct}} in quantized GGUF format (\code{Q4\_K\_M}).
+    \item \textbf{Pinned Software Bill of Materials (SBOM):} Pinned artifact \code{qwen2.5-1.5b-instruct-q4\_k\_m.gguf} from repository \code{Qwen/Qwen2.5-1.5B-Instruct-GGUF}.
+    \item \textbf{Licensing:} Governed by the \textbf{Apache 2.0 License} (commercial deployment permitted; full notices bundled).
+    \item \textbf{Storage Footprint:} Approximately \textbf{1.12 GB} GGUF file size on disk.
+    \item \textbf{Inference Runtime:} \code{llama.cpp} CPU execution via AVX2 vector instructions.
+    \item \textbf{Single-Model Lifecycle:} Loaded on demand; core reconciliation executes with or without the model loaded.
+\end{itemize}
+
+\vspace{0.2cm}
+
+% =========================================================
+% SECTION 7: CYBERSECURITY & AUDIT TRAILS
+% =========================================================
+\section{Cybersecurity, Audit Trails \& On-Device Privacy}
+
+\subsection{Tamper-Evident Hash-Chained Audit Trail}
+Rather than claiming an impossible "immutable blockchain on a desktop," the application implements a \textbf{tamper-evident audit manifest} (\code{audit\_manifest.json}):
+\begin{enumerate}
+    \item \textbf{Monotonically Increasing Sequences:} Every user action and processing step is logged with a sequential counter ($E_1, E_2, \dots, E_n$).
+    \item \textbf{Cryptographic Binding:} Each event contains the SHA-256 hash of the preceding event:
+    \begin{equation}
+        H_k = \text{SHA-256}(H_{k-1} \,\|\, \text{CanonicalJSON}(E_k))
+    \end{equation}
+    \item \textbf{Run Identity:} Records input file hashes, software build hash, local operator label, and execution timestamps generated at runtime.
+    \item \textbf{The Trusted Anchor \& Verification Guarantees:} The terminal event hash $H_n$ and export manifest digest serve as the root anchor. When exported, this terminal hash can be printed on the official reconciliation summary sheet or logged to an external administrative register. A standalone verifier detects intermediate record alteration, reordering, or deletion; it cannot prevent a local administrator from regenerating an unanchored log from scratch.
+    \item \textbf{Operator Identity Mechanism:} The prototype records a \textbf{local operator label} (e.g., workstation username or clerk session identifier); this is an operational audit tag, not cryptographic proof of user identity.
+\end{enumerate}
+
+\subsection{On-Device Data Minimization (DPDP Context)}
+All processing occurs exclusively inside the RAM and local storage of the government workstation. Zero bytes leave the machine. We do not claim that running offline automatically grants "100\% statutory compliance" or that DPDP Section 16 is an active blanket ban on cloud services. Phased commencement of the Digital Personal Data Protection (DPDP) Act, 2023 was notified by the central government on 13 November 2025, with principal data-processing and fiduciary provisions scheduled to take effect 18 months post-notification. Applicable legal obligations must be reassessed for the actual pilot and deployment dates. We state that the software is architected to uphold the \textbf{data minimization and storage limitation principles} of the DPDP Act. Deployment remains subject to departmental policy, applicable law, and security review.
+
+\vspace{0.2cm}
+
+% =========================================================
+% SECTION 8: GROUNDED COMMERCIAL MODEL
+% =========================================================
+\section{Grounded Commercial Model (Office Starter Pack)}
+
+\subsection{Proposed Product Packaging Hypothesis}
+Government administrative offices purchase utility software for departmental branches rather than individual floating seats:
+\begin{itemize}
+    \item \textbf{Office Starter Pack: ₹49,995 (Initial License Hypothesis):} Covers up to 5 licensed desktop installations within one administrative office; offline core license for Scheme Reconciliation module; onboarding assistance, user guide, and 1st-year bug fixes and standard updates.
+    \item \textbf{Annual Maintenance \& Updates: ₹9,999 / year per pack (Starting Year 2):} Annual support, scheme format updates, and certified offline patch media ($\sim$₹1,999 per workstation per year).
+\end{itemize}
+\textit{Note: All prices and commercial terms---including perpetuity, update entitlements, transferability, and AMC scope---are provisional business hypotheses, not final quotes; exclude applicable GST.}
+
+\subsection{Public Procurement Context (GFR Rule 149 Realities)}
+Under Rule 149 of the General Financial Rules (GFR), administrative heads possess direct online purchase authority on the Government e-Marketplace (GeM) up to \textbf{₹50,000} for products meeting required quality, price reasonableness, and delivery conditions. We do not market ₹49,995 as a guaranteed tender workaround. With applicable GST, total invoiced value may exceed ₹50,000. Furthermore, GeM category registration, supplier eligibility, and purchasing authority limits vary across departments. Pricing must reflect development and support costs, while procurement pathways must be verified with each buyer.
+
+\vspace{0.2cm}
+
+% =========================================================
+% SECTION 9: PROTOTYPE VALIDATION BUDGET
+% =========================================================
+\section{Itemized Prototype Validation Budget (The Restricted ₹50,000 Ask)}
+
+\subsection{Executive Budget Principles \& Funding Summary}
+The venture operates on a \textbf{stage-gated, ₹50,000 cash budget} to validate a tightly scoped, offline-first prototype. Existing student-owned equipment, open-source software, and confirmed university resources are utilized wherever practical. Founder and student-team labour is treated strictly as an in-kind academic contribution, not as free cash or revenue.
+
+\vspace{0.15cm}
+\noindent
+\begin{tabularx}{\textwidth}{|l|r|Y|}
+\hline
+\textbf{Item} & \textbf{Amount (₹)} & \textbf{Accounting Treatment \& Conditionality} \\
+\hline
+Prototype grant requested & \textbf{₹50,000.00} & Proposed funding ask (Innovathon 2.0 prize pool / university incubation); not yet secured. \\
+\hline
+Year 1 cash-spend ceiling & \textbf{₹50,000.00} & Spend permitted only after formal written grant sanction and strictly against eligible items. \\
+\hline
+Estimated academic in-kind contribution & \textbf{₹1,00,000.00} & Non-cash estimate (CUJ lab computing, mentor hours, student R\&D time); not available cash. \\
+\hline
+Year 1 commercial revenue & \textbf{₹0.00} & Zero commercial sales assumed during the academic prototype validation phase. \\
+\hline
+Year 1 net cash position (if grant is fully spent) & \textbf{₹0.00} & Cash-neutral prototype phase (grant-funded cash budget, not commercial break-even). \\
+\hline
+\end{tabularx}
+
+\vspace{0.2cm}
+\subsection{Final Itemized Prototype-Validation Budget (₹50,000 Allocation)}
+Amounts represent conservative planning ceilings, not vendor quotations. Quotations will be obtained prior to disbursement.
+
+\vspace{0.15cm}
+\noindent
+\begin{tabularx}{\textwidth}{|c|l|r|r|Y|}
+\hline
+\textbf{No.} & \textbf{Budget Head} & \textbf{Allocation (₹)} & \textbf{Share} & \textbf{Operational Purpose \& Allowable Use} \\
+\hline
+1 & \textbf{Workflow discovery and local travel} & ₹7,000.00 & 14\% & Local transport for workflow interviews, mapping legacy spreadsheet columns, and documenting reconciliation bottlenecks. No gifts or payments to officials. \\
+\hline
+2 & \textbf{Offline deployment media \& accessories} & ₹5,000.00 & 10\% & Hardware USB drives with encrypted partitions, tamper-evident physical pouches, labels, and adapters for moving signed offline installers without cloud networks. \\
+\hline
+3 & \textbf{Installer packaging \& security hardening} & ₹8,000.00 & 16\% & Offline installer scripting, dependency pinning/SBOM generation, file-hash manifest generation, local loopback egress tests, and secure default configs. \\
+\hline
+4 & \textbf{Functional, financial-integrity \& QA} & ₹8,000.00 & 16\% & Repeatable test harness execution for integer paise parsing, row conservation invariants, multi-key candidate generation, Excel export, and audit chaining. \\
+\hline
+5 & \textbf{Low-spec hardware \& compatibility testing} & ₹6,000.00 & 12\% & Temporary lab access, RAM/peripheral compatibility checks, and testing on representative low-spec Core i3 / 8 GB target PCs. Existing PCs used first; no workstation purchase. \\
+\hline
+6 & \textbf{Bilingual documentation \& training aids} & ₹4,000.00 & 8\% & Concise 2-page visual SOP user guides in Hindi and English, known-limitations sheet, and step-by-step clerical review instructions. \\
+\hline
+7 & \textbf{Demonstration \& evaluation logistics} & ₹5,000.00 & 10\% & Printing verification reports, workshop demonstration materials, and feedback collection for controlled evaluation sessions. Strictly zero live citizen data. \\
+\hline
+8 & \textbf{Data-governance \& admin preparation} & ₹2,000.00 & 4\% & Preparation of academic introduction letters, student consent filings, synthetic data checklists, and compliance records. Excludes formal legal retainers. \\
+\hline
+9 & \textbf{Contingency reserve} & ₹5,000.00 & 10\% & Restricted reserve for unforeseen eligible prototype expenses. Requires recorded justification and faculty/grant approval. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{TOTAL PROTOTYPE VALIDATION BUDGET}} & \textbf{₹50,000.00} & \textbf{100\%} & \textbf{Stage-Gated Evidence Generation Budget} \\
+\hline
+\end{tabularx}
+
+\vspace{0.2cm}
+\subsection{Scope Funded by ₹50,000 \& Spending Stage Gates}
+\textbf{Scope Funded:} Offline desktop application for cycle-level reconciliation; exact matching and multi-signal candidate generation; integer paise arithmetic; multi-sheet Excel export; tamper-evident SHA-256 audit manifest; reproducible synthetic dataset with ground truth; clean-machine installer; and bilingual SOP.\\
+\textbf{Explicit Exclusions:} Live payment authorization; ingestion of actual Aadhaar numbers or live citizen PII; production government server integration; automated document OCR or handwriting parsing; secretariat note-sheet (\textit{Tippani}) generation; paid cloud AI APIs; and market-rate founder salaries.
+
+\vspace{0.15cm}
+\noindent
+\begin{tabularx}{\textwidth}{|l|r|Y|}
+\hline
+\textbf{Gate} & \textbf{Spend Ceiling} & \textbf{Evidence Required Before Tranche Release} \\
+\hline
+\textbf{Gate 1 — Define \& Baseline} & ₹12,500.00 & Approved project scope document, clerical workflow map, synthetic test dataset specification, itemized procurement list, and designated budget custodian. \\
+\hline
+\textbf{Gate 2 — Build \& Verify} & ₹37,500.00 & Pinned offline installer build, reproducible test suite report (passing 100\% of unit/system tests), financial invariant check logs, and limitations register. \\
+\hline
+\textbf{Gate 3 — Demonstrate \& Close} & ₹45,000.00 & Successful clean-install offline demonstration, stakeholder feedback sheets, bilingual SOP guides, issue backlog, and final validation report. \\
+\hline
+\textbf{Controlled Contingency} & ₹50,000.00 max & Unforeseen eligible expenses only; requires written justification, faculty endorsement, and expense vouchers. \\
+\hline
+\end{tabularx}
+
+\vspace{0.2cm}
+
+% =========================================================
+% SECTION 10: 3-YEAR OPERATING SCENARIO & MARKET SIZING
+% =========================================================
+\section{Reconciled 3-Year Operating Scenario \& Market Sizing}
+
+\subsection{Commercial Assumptions \& Procurement Safeguards}
+\begin{itemize}[noitemsep,topsep=0pt]
+    \item \textbf{Office Starter Pack:} ₹49,995 per 5-seat pack (provisional pricing hypothesis; validate with buyers and delivery costs).
+    \item \textbf{Annual Maintenance / Support (AMC):} ₹9,999 per pack from Year 2 (provisional renewal hypothesis).
+    \item \textbf{Tax Safeguards (GST Excluded):} All commercial figures exclude applicable GST. If 18\% GST applies, a ₹49,995 pre-tax license invoices at \textbf{₹58,994.10}, and a ₹9,999 renewal invoices at \textbf{₹11,798.82}. GST is a statutory pass-through and is never treated as company revenue.
+    \item \textbf{Procurement Compliance:} The pricing of ₹49,995 is \textbf{not} positioned as a device to bypass public tender thresholds under General Financial Rules (GFR Rule 149). Buyer-specific delegated powers, GeM category availability, and price-reasonableness criteria vary across departments. Procurement routes will be aligned with the Department of Expenditure’s current procurement manuals.
+\end{itemize}
+
+\vspace{0.15cm}
+\subsection{Three-Year Commercial Scenario \& Cash Envelopes}
+
+\noindent
+\begin{tabularx}{\textwidth}{|l|r|r|r|}
+\hline
+\textbf{Operational Metric} & \textbf{Year 1 (Prototype)} & \textbf{Year 2 (Rollout)} & \textbf{Year 3 (Scale)} \\
+\hline
+New 5-Seat Packs Sold & 0 & 5 Packs & 20 Packs \\
+Renewing Packs (AMC @ ₹9,999) & 0 & 0 & 4 Packs (80\% renewal) \\
+New License Revenue (Pre-Tax) & ₹0.00 & ₹2,49,975.00 & ₹9,99,900.00 \\
+Maintenance / AMC Revenue & ₹0.00 & ₹0.00 & ₹39,996.00 \\
+\hline
+\textbf{Total Commercial Revenue} & \textbf{₹0.00} & \textbf{₹2,49,975.00} & \textbf{₹10,39,896.00} \\
+Prototype Seed Grant Requested & ₹50,000.00 & ₹0.00 & ₹0.00 \\
+Planned Cash Operating Envelope & ₹50,000.00 & ₹4,00,000.00 & ₹7,00,000.00 \\
+Estimated In-Kind Academic Contributions & ₹1,00,000.00 & --- & --- \\
+\hline
+\textbf{Cash Coverage Residual (Full Envelope Used)} & \textbf{₹0.00 (Net of Grant)} & \textbf{−₹1,50,025.00} & \textbf{+₹3,39,896.00} \\
+\hline
+\end{tabularx}
+
+\vspace{0.15cm}
+\noindent\textbf{Year 2 Deficit Financing Strategy (−₹1,50,025):} The ₹1.50 Lakh Year 2 operational deficit is planned to be funded via university incubation seed support under the \textbf{J\&K Startup Policy 2024–2027} (which describes one-time seed assistance of up to ₹20 Lakhs for eligible JKEDI-recognized startups, subject to committee appraisal and approval; a framework to investigate, not an assumed grant), supplemented by targeting up to ₹2,00,000 in bridge funding capacity and deferred student founder stipends.\\
+\noindent\textit{Important Financial Note on Year 3: The positive modeled operating result in Year 3 (+₹3,39,896) reflects an illustrative scenario under incomplete cost assumptions; it excludes corporate taxes, market-rate founder salaries, working capital financing, and unbudgeted compliance testing. It is a planning model, not a forecast of established profitability.}
+
+\vspace{0.15cm}
+\subsection{Sales Sensitivity Analysis (Mitigating Optimism Bias)}
+
+\noindent
+\begin{tabularx}{\textwidth}{|l|l|r|Y|}
+\hline
+\textbf{Operating Scenario} & \textbf{Sales Calculation} & \textbf{Revenue (₹)} & \textbf{Residual vs. Stated Cash Envelope} \\
+\hline
+Year 2 Downside: 3 packs & 3 $\times$ ₹49,995 & ₹1,49,985.00 & −₹2,50,015.00 against ₹4,00,000 \\
+Year 2 Base: 5 packs & 5 $\times$ ₹49,995 & ₹2,49,975.00 & −₹1,50,025.00 against ₹4,00,000 \\
+Year 2 Cash-Coverage Case: 9 packs & 9 $\times$ ₹49,995 & ₹4,49,955.00 & +₹49,955.00 against ₹4,00,000 \\
+Year 3 Downside: 10 packs + 2 renewals & 10 $\times$ ₹49,995 + 2 $\times$ ₹9,999 & ₹5,19,948.00 & −₹1,80,052.00 against ₹7,00,000 \\
+Year 3 Base: 20 packs + 4 renewals & 20 $\times$ ₹49,995 + 4 $\times$ ₹9,999 & ₹10,39,896.00 & +₹3,39,896.00 against ₹7,00,000 \\
+\hline
+\end{tabularx}
+
+\vspace{0.15cm}
+\subsection{Market Sizing: Grounded Administrative Baseline}
+\begin{itemize}[noitemsep,topsep=0pt]
+    \item \textbf{The Documented Universe:} J\&K Planning Development \& Monitoring Department data (March 2020) documents \textbf{285 Community Development Blocks}.
+    \item \textbf{Illustrative Scaling Ceiling:} If each block administrative complex operates 3 office packs (15 workstations), 285 complexes represent a theoretical addressable value of \textbf{₹4.27 Crores} ($855 \times ₹49,995$). This is an illustrative scaling scenario, not a verified obtainable market.
+    \item \textbf{Near-Term Commercial Target:} Deploying 25 packs across Years 2 and 3 represents \textbf{₹12.5 Lakhs} in initial license revenue, establishing a focused, verifiable commercial base.
+\end{itemize}
+
+\vspace{0.15cm}
+\subsection{Explicit Financial Exclusions \& Regulatory References}
+\noindent\textbf{Explicit Financial Exclusions:} The 3-year commercial scenario deliberately excludes or defers: (1) market-rate founder salaries for all 6 student team members, (2) full-time dedicated payroll, commercial office leasing, and corporate legal retainers, (3) income tax liabilities and advance tax payments, (4) travel outside Jammu, Samba, and adjoining districts, (5) third-party ISO/IEC 27001 audits or penetration tests, and (6) bespoke integrations with state data centres or legacy departmental backends.
+
+\vspace{0.1cm}
+\noindent\textbf{Official References for Verification:}
+\begin{itemize}[noitemsep,topsep=0pt]
+    \item \textbf{Startup India (\JK{} Startup Policy 2024--2027):} \url{https://www.startupindia.gov.in/content/sih/en/state-startup-policies/Jammu-and-Kashmir-state-policy.html} --- Governs eligibility criteria and application pathways for JKEDI-recognized seed assistance.
+    \item \textbf{Department of Expenditure (Ministry of Finance) --- Procurement Manuals:} \url{https://doe.gov.in/en/manuals} --- Governs public procurement rules, direct purchase thresholds, and GeM purchasing guidelines.
+    \item \textbf{Central Board of Indirect Taxes and Customs (CBIC) --- GST Sectoral FAQs:} \url{https://cbic-gst.gov.in/sectoral-faq.html} --- Provides guidance on software licensing versus professional IT service tax classification.
+\end{itemize}
+
+\vspace{0.2cm}
+
+% =========================================================
+% SECTION 11: INSTITUTIONAL PILOT PLAYBOOK
+% =========================================================
+\section{Institutional Pilot Playbook (CUJ + JU SIIEDC Academic Bridge)}
+
+\subsection{The Dual-University Incubation Ecosystem}
+As students of the \textbf{Central University of Jammu (CUJ)} presenting at \textbf{Innovathon 2.0 (University of Jammu)}, the venture leverages the combined strengths of both institutions:
+\begin{enumerate}
+    \item \textbf{Central University of Jammu (CUJ) --- Home Institution Anchor:}
+    The Department of Computer Science \& IT / Startup Cell issues a formal academic recommendation letter to the \textbf{Deputy Commissioner (DC) Samba} (where the CUJ campus is located) requesting permission for a 4-week zero-risk academic Proof-of-Concept (PoC) pilot. Campus computing labs and faculty mentorship are provided at zero cost. University sponsorship, office administrative permission, data-use approval, and commercial procurement are treated as distinct institutional requirements.
+    \item \textbf{University of Jammu (SIIEDC) --- Regional Innovation Host:}
+    Mentorship through the Skill Incubation, Innovation and Entrepreneurship Development Centre (SIIEDC) under the \textit{J\&K Tech \& Innovation Surge 2026}. Access to the Innovathon 2.0 prize pool to fund the ₹50,000 prototype validation stage.
+\end{enumerate}
+
+\subsection{The 6-Stage Go-to-Market Sequence}
+\textbf{Stage 1 (Hackathon):} Demonstrate working offline prototype on synthetic data $\rightarrow$ \textbf{Stage 2 (University Intro):} Secure faculty sponsor and administrative introduction to DC Samba / DC Jammu $\rightarrow$ \textbf{Stage 3 (Controlled Pilot):} Obtain written clearance for a 4-week pilot in one local BDO/Tehsil office using synthetic or de-identified data $\rightarrow$ \textbf{Stage 4 (Pilot Validation Report):} Document measured task time saved and clerical usability $\rightarrow$ \textbf{Stage 5 (Commercial Packaging):} Finalize GeM listing and support documentation $\rightarrow$ \textbf{Stage 6 (Repeatable Sales):} Expand to neighboring BDO offices across Jammu, Samba, and Udhampur districts.
+
+\vspace{0.2cm}
+
+% =========================================================
+% SECTION 12: ACCEPTANCE CRITERIA & RISK REGISTER
+% =========================================================
+\section{Technical Acceptance Criteria, Known Limitations \& Risk Register}
+
+\subsection{Technical Acceptance Criteria (Evidence-Based Gates)}
+To replace unsubstantiated scorecards with engineering rigor, the prototype is evaluated against concrete acceptance gates:
+
+\vspace{0.15cm}
+\noindent
+\begin{tabularx}{\textwidth}{|l|Y|Y|}
+\hline
+\textbf{Dimension} & \textbf{Target Acceptance Criteria} & \textbf{Verification Method} \\
+\hline
+\textbf{Record Conservation} & Every source row has exactly one primary disposition; no silent record dropping. & Invariant check ($N = M + U + D + I + P$) verified by unit test. \\
+\hline
+\textbf{Financial Accuracy} & All calculations performed in integer paise; zero floating-point drift. & Parser test suite covering standard, comma-grouped, and malformed currency. \\
+\hline
+\textbf{Matching Quality} & Exact-match precision, candidate precision, recall, and false-match rates reported separately on synthetic benchmarks; synthetic results explicitly noted as not guaranteeing dirty field accuracy. & Labeled synthetic test dataset with known ground truth. \\
+\hline
+\textbf{Human Control} & Zero auto-approval of fuzzy candidates without explicit clerk confirmation. & Event log verifies operator label and explicit action before row is moved to \code{MATCHED}. \\
+\hline
+\textbf{Offline Operation} & Full workflow executes with networking physically and technically disabled. & Live demonstration with Wi-Fi disabled + external network traffic audit. \\
+\hline
+\textbf{Audit Verification} & Altered, reordered, or deleted log entries are detected by the verifier. & Integrity test script deliberately corrupting intermediate hash links. \\
+\hline
+\end{tabularx}
+
+\subsection{Known Limitations \& Risk Register}
+\vspace{0.15cm}
+\noindent
+\begin{tabularx}{\textwidth}{|l|c|Y|}
+\hline
+\textbf{Identified Risk} & \textbf{Severity} & \textbf{Built-In Mitigation / Evidence Pathway} \\
+\hline
+\textbf{False Match from Shared Suffix} & Critical & Masked account suffix (\code{****-1234}) is strictly supporting evidence; matching requires converging independent signals. \\
+\hline
+\textbf{Hidden Financial Discrepancies} & High & Record linkage and amount comparison are decoupled; matched-pair amount variances are explicitly flagged. \\
+\hline
+\textbf{Duplicate Row Distortion} & High & Canonical duplicate policy applied; duplicates are assigned to \code{DUPLICATE\_EXCLUDED} and exported in a separate tab. \\
+\hline
+\textbf{LLM Inference Failure or Stall} & Medium & Local LLM is strictly an optional assistant for unknown column mapping; core reconciliation runs deterministically if LLM is disabled. \\
+\hline
+\textbf{Privileged Log Tampering} & Medium & SHA-256 hash chaining detects internal record alteration when anchored; external signed checkpoints required for high-assurance audit defense. \\
+\hline
+\textbf{Procurement Delays} & High & Phased pilot model: Stage 1 pilot is decoupled from commercial procurement by requiring four distinct non-commercial approvals: (1) CUJ academic sponsorship, (2) BDO/Tehsil administrative site permission, and (3) data-use approval on synthetic or de-identified datasets, before commercial procurement is ever initiated. \\
+\hline
+\end{tabularx}
+
+\vspace{0.3cm}
+\begin{center}
+    \textbf{“AI suggests. Deterministic code calculates. The officer decides. Every material action is traceable.”}
+\end{center}
+
+\end{document}
