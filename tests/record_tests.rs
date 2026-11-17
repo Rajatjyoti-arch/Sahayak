@@ -205,4 +205,3 @@ fn test_record_equality_and_paise_preservation() {
     assert_ne!(r1, r3);
     assert_eq!(r1.sanctioned_amount(), amount);
 }
-
