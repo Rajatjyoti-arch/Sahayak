@@ -87,7 +87,7 @@ async fn test_agent_loop_deterministic_mock_run() {
             content,
             is_error,
         } => {
-            assert_eq!(tool_call_id, "call_reconcile_pmay");
+            assert_eq!(tool_call_id, "call_1_0");
             assert!(!is_error);
             assert!(content.contains("MATHEMATICALLY_CONSERVED"));
             assert!(content.contains("₹ 1,500.00"));
