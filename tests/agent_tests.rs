@@ -86,6 +86,7 @@ async fn test_agent_loop_deterministic_mock_run() {
             tool_call_id,
             content,
             is_error,
+            ..
         } => {
             assert_eq!(tool_call_id, "call_1_0");
             assert!(!is_error);
