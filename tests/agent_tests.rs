@@ -1,8 +1,10 @@
-use sahayak_core::{
-    Message, MockModel, Model, ModelError, ReconcileTool, StopReason, Tool, ToolCall,
+use agentic_harness::{
+    BoxFuture, DefaultPolicy, Message, MockModel, Model, ModelError, StopReason, Tool, ToolCall,
     ToolDefinition, run_agent,
 };
+use sahayak_core::ReconcileTool;
 use serde_json::json;
+use tokio_util::sync::CancellationToken;
 
 #[tokio::test]
 async fn test_reconcile_tool_direct_execution() {
@@ -33,11 +35,30 @@ async fn test_reconcile_tool_direct_execution() {
 
 #[tokio::test]
 async fn test_agent_loop_deterministic_mock_run() {
-    let model = MockModel::new();
+    let turn1 = Message::assistant(
+        Some("Analyzing scheme reconciliation status...".to_string()),
+        vec![ToolCall {
+            id: "call_reconcile_pmay".to_string(),
+            name: "reconcile".to_string(),
+            arguments: json!({ "scheme": "PMAY" }),
+        }],
+    );
+    let turn2 = Message::assistant_text(
+        "Reconciliation analysis complete:\n\
+        1. Row Conservation: Both files strictly conserve all 13 rows.\n\
+        2. Financial Bridge: net variance of ₹ 1,500.00.\n\
+        3. Root Cause: Parveen Akhtar (SAN-009) under-disbursement.",
+    );
+
+    let model = MockModel::with_responses(vec![turn1, turn2]);
     let tools: Vec<Box<dyn Tool>> = vec![Box::new(ReconcileTool::new())];
     let task = "Explain the financial variance in PMAY scheme and verify row conservation.";
+    let policy = DefaultPolicy::new(".");
+    let cancel = CancellationToken::new();
 
-    let output = run_agent(&model, &tools, task, 8).await.unwrap();
+    let output = run_agent(&model, &tools, task, &policy, 8, cancel)
+        .await
+        .unwrap();
 
     assert_eq!(output.stop_reason, StopReason::Stop);
     assert_eq!(output.turns_executed, 2);
@@ -78,10 +99,11 @@ async fn test_agent_loop_deterministic_mock_run() {
         Message::Assistant {
             content,
             tool_calls,
+            ..
         } => {
             assert!(tool_calls.is_empty());
             let text = content.as_ref().unwrap();
-            assert!(text.contains("Row Conservation: Both files strictly conserve all 13 rows"));
+            assert!(text.contains("strictly conserve all 13 rows"));
             assert!(text.contains("net variance of ₹ 1,500.00"));
             assert!(text.contains("Parveen Akhtar (SAN-009)"));
         }
@@ -95,16 +117,16 @@ impl Model for InfiniteLoopModel {
         &'a self,
         _history: &'a [Message],
         _tools: &'a [ToolDefinition],
-    ) -> sahayak_core::agent::tool::BoxFuture<'a, Result<Message, ModelError>> {
+    ) -> BoxFuture<'a, Result<Message, ModelError>> {
         Box::pin(async move {
-            Ok(Message::Assistant {
-                content: Some("Calling tool repeatedly...".to_string()),
-                tool_calls: vec![ToolCall {
+            Ok(Message::assistant(
+                Some("Calling tool repeatedly...".to_string()),
+                vec![ToolCall {
                     id: "loop_call".to_string(),
                     name: "reconcile".to_string(),
                     arguments: json!({ "scheme": "PMAY" }),
                 }],
-            })
+            ))
         })
     }
 }
@@ -113,9 +135,11 @@ impl Model for InfiniteLoopModel {
 async fn test_agent_loop_max_turns_exhaustion() {
     let model = InfiniteLoopModel;
     let tools: Vec<Box<dyn Tool>> = vec![Box::new(ReconcileTool::new())];
+    let policy = DefaultPolicy::new(".");
+    let cancel = CancellationToken::new();
 
     let max_turns = 3;
-    let output = run_agent(&model, &tools, "Loop test", max_turns)
+    let output = run_agent(&model, &tools, "Loop test", &policy, max_turns, cancel)
         .await
         .unwrap();
 

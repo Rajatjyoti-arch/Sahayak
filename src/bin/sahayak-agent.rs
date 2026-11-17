@@ -1,5 +1,10 @@
-use sahayak_core::{MockModel, Model, OllamaModel, ReconcileTool, Tool, run_agent};
+use agentic_harness::{
+    DefaultPolicy, Message, MockModel, Model, OllamaModel, Tool, ToolCall, run_agent,
+};
+use sahayak_core::ReconcileTool;
+use serde_json::json;
 use std::env;
+use tokio_util::sync::CancellationToken;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -66,7 +71,30 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let model: Box<dyn Model> = if use_mock {
         println!("==> Running in deterministic OFFLINE MOCK mode (Demo Insurance)");
-        Box::new(MockModel::new())
+        let turn1 = Message::assistant(
+            Some(
+                "Analyzing scheme reconciliation status and verifying row conservation. \
+                Invoking the core reconciliation engine..."
+                    .to_string(),
+            ),
+            vec![ToolCall {
+                id: "call_reconcile_pmay".to_string(),
+                name: "reconcile".to_string(),
+                arguments: json!({ "scheme": "PMAY" }),
+            }],
+        );
+        let turn2 = Message::assistant_text(
+            "Reconciliation analysis complete:\n\
+            1. Row Conservation: Both files strictly conserve all 13 rows \
+            (5 Matched, 2 Unmatched, 1 Duplicate, 1 Invalid, 4 Pending). Zero silent drops.\n\
+            2. Financial Bridge: Total Sanctioned is ₹ 56,000.50 (5,600,050 paise) and \
+            Total Disbursed is ₹ 54,500.50 (5,450,050 paise), leaving a net variance of \
+            ₹ 1,500.00 (150,000 paise). Zero floating-point error.\n\
+            3. Root Cause: Beneficiary Parveen Akhtar (SAN-009) was sanctioned ₹ 5,000.00 \
+            but disbursed ₹ 3,500.00 (DISB-009). The ₹ 1,500.00 under-disbursement is safely \
+            isolated in the Pending partition for administrative adjudication.",
+        );
+        Box::new(MockModel::with_responses(vec![turn1, turn2]))
     } else {
         println!(
             "==> Running with OLLAMA model '{}' at {}",
@@ -75,9 +103,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Box::new(OllamaModel::new(ollama_base_url, ollama_model))
     };
 
+    let cwd = env::current_dir().unwrap_or_else(|_| ".".into());
+    let policy = DefaultPolicy::new(cwd);
     let tools: Vec<Box<dyn Tool>> = vec![Box::new(ReconcileTool::new())];
+    let cancel = CancellationToken::new();
 
-    let output = run_agent(model.as_ref(), &tools, &task, 8).await?;
+    let output = run_agent(model.as_ref(), &tools, &task, &policy, 8, cancel).await?;
 
     println!("\n========================================================");
     println!("SAHAYAK AGENT EXECUTION SUMMARY");

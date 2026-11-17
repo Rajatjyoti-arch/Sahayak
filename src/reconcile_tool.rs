@@ -1,40 +1,11 @@
-use crate::agent::types::ToolDefinition;
 use crate::currency::{Paise, Variance};
+use agentic_harness::{BoxFuture, Tool};
 use serde_json::{Value, json};
 use std::collections::{HashMap, HashSet};
-use std::future::Future;
-use std::pin::Pin;
 use std::str::FromStr;
 
-pub type BoxFuture<'a, T> = Pin<Box<dyn Future<Output = T> + Send + 'a>>;
-
-/// Trait defining an executable agent tool.
-pub trait Tool: Send + Sync {
-    /// Unique name of the tool (e.g. "reconcile").
-    fn name(&self) -> &str;
-
-    /// Natural-language description of tool functionality.
-    fn description(&self) -> &str;
-
-    /// JSON schema describing the accepted arguments.
-    fn parameters_schema(&self) -> Value;
-
-    /// Full tool definition for registration with model APIs.
-    fn definition(&self) -> ToolDefinition {
-        ToolDefinition {
-            name: self.name().to_string(),
-            description: self.description().to_string(),
-            parameters: self.parameters_schema(),
-        }
-    }
-
-    /// Executes the tool asynchronously with validated JSON arguments.
-    fn run<'a>(&'a self, args: Value) -> BoxFuture<'a, Result<String, String>>;
-}
-
-const SAMPLE_SANCTIONS: &str = include_str!("../../prototype/data/synthetic_sanction_list.csv");
-const SAMPLE_DISBURSEMENTS: &str =
-    include_str!("../../prototype/data/synthetic_disbursement_log.csv");
+const SAMPLE_SANCTIONS: &str = include_str!("../prototype/data/synthetic_sanction_list.csv");
+const SAMPLE_DISBURSEMENTS: &str = include_str!("../prototype/data/synthetic_disbursement_log.csv");
 
 /// Built-in in-memory scheme reconciliation tool.
 ///
@@ -81,7 +52,6 @@ fn string_similarity(a: &str, b: &str) -> f64 {
         return 0.0;
     }
 
-    // Levenshtein distance
     let a_chars: Vec<char> = sa.chars().collect();
     let b_chars: Vec<char> = sb.chars().collect();
     let len_a = a_chars.len();
